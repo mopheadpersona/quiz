@@ -19,3 +19,18 @@ test_quiz = {
 		}
 	]
 }
+
+test_humans = [
+	{
+		"name": "NotHuman",
+		"position": "1",
+		"id": "fb40fca8-39e4-4d94-9669-c1af2639263e",
+		"points": "100"
+	},
+	{
+		"name": "Human",
+		"position": "2",
+		"id": "062ebbd4-1878-4592-a7c7-69fcc8830eb9",
+		"points": "12",
+	}
+]

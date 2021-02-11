@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block title %}LeaderBoard{% endblock %}
+{% block body %}
+	<div class="card">
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col">Position</th>
+					<th scope="col">Name</th>
+					<th scope="col">Points</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for human in humans %}
+				<tr>
+					<td>{{human.position}}</td>
+					<td>{{human.name}}</td>
+					<td>{{human.points}}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}

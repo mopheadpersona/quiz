@@ -1,12 +1,12 @@
 from flask import Flask, abort, render_template, request
-from data import test_quiz 
+from data import test_quiz, test_humans
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
 	return render_template('home.html')
-	
+
 @app.route('/quiz')
 def quiz():
 	# return test_quiz
@@ -24,6 +24,9 @@ def process_quiz():
 
 	return str(points)
 
+@app.route('/leader-board')
+def leader_board():
+	return render_template('leaderboard.html', humans=test_humans)
 
 @app.errorhandler(404)
 def page_not_found(error):
