@@ -29,7 +29,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/Users/deemaneken/Projects/Python/quiz-app/quiz-backend/venv"
+set -gx VIRTUAL_ENV "/Users/deemaneken/Projects/Python/quiz/venv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

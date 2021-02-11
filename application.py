@@ -3,9 +3,12 @@ from data import test_quiz
 
 app = Flask(__name__)
 
-
 @app.route('/')
 def index():
+	return render_template('home.html')
+	
+@app.route('/quiz')
+def quiz():
 	# return test_quiz
 	return render_template('quiz.html', quiz=test_quiz)
 
