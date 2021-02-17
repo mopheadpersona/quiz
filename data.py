@@ -1,3 +1,14 @@
+test_quizes = [
+	{
+		'id': 'c9b42634-6fd5-40cf-854f-3c6cfc191a2b',
+		'name': 'Basic questions',
+	},
+	{
+		'id': '4',
+		'name': 'Another questions',
+	}
+]
+
 test_quiz = {
 	'id': 'c9b42634-6fd5-40cf-854f-3c6cfc191a2b',
 	'name': 'Basic questions',

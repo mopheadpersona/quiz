@@ -1,11 +1,11 @@
 from flask import Flask, abort, render_template, request
-from data import test_quiz, test_humans
+from data import test_quiz, test_humans, test_quizes
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-	return render_template('home.html')
+	return render_template('home.html', quizes=test_quizes)
 
 @app.route('/quiz')
 def quiz():
