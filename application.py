@@ -43,10 +43,15 @@ def create_quiz():
 	for i in range(1, counter + 1):
 		question = {}
 		question['question'] = query[f'questions[question][{i}]']
+		question['correct_answer_id'] = 'the_id'
 		answers = []
 		for j in range(1, 5):
 			answer = {}
 			answer['answer'] = query[f'answers[question][{i}][answer][{j}]']
+			if query.get(f'correct[question][{i}][answer][{j}]'):
+				answer['id'] = 'the_id'
+			else:
+				answer['id'] = 'just_id'
 			answers.append(answer)
 		question['answers'] = answers
 		questions.append(question)
