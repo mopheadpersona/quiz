@@ -8,35 +8,59 @@
 			<div class="card-body">
 				<div class="form-group">
 					<label for="quizName">Quiz Name</label>
-					<input type="text" class="form-control" id="quizName" name="name">
+					<input required type="text" class="form-control" id="quizName" name="name">
 				</div>
 				<div class="form-group">
 					<label for="quizDescription">Description</label>
-					<input type="text" class="form-control" id="quizDescription" name="description">
+					<input required type="text" class="form-control" id="quizDescription" name="description">
 				</div>
 				<div class="form-group m-2" id="question-container">
 					<label for="question">Question 1</label>
-					<input type="text" name="questions[question][1]">
+					<input required type="text" class="form-control" name="questions[question][1]">
 					<div>
-						<div>
-							<input type="radio">
-							<label for="radioButton">Answer 1</label>
-							<input type="text" name="answers[question][1][answer][1]">
+						<div class="input-group m-2">
+							<div class="input-group-prepend">
+								<div class="input-group-text">
+									<input type="checkbox" id="radioButton">
+								</div>
+								<span class="input-group-text">
+									Answer 1
+								</span>
+							</div>
+							<input required type="text" class="form-control" name="answers[question][1][answer][1]">
 						</div>
-						<div>
-							<input type="radio">
-							<label for="radioButton">Answer 2</label>
-							<input type="text" name="answers[question][1][answer][2]">
+						<div class="input-group m-2">
+							<div class="input-group-prepend">
+								<div class="input-group-text">
+									<input type="checkbox" id="radioButton">
+								</div>
+								<span class="input-group-text">
+									Answer 2
+								</span>
+							</div>
+							<input required type="text" class="form-control" name="answers[question][1][answer][2]">
 						</div>
-						<div>
-							<input type="radio">
-							<label for="radioButton">Answer 3</label>
-							<input type="text" name="answers[question][1][answer][3]">
+						<div class="input-group m-2">
+							<div class="input-group-prepend">
+								<div class="input-group-text">
+									<input type="checkbox" id="radioButton">
+								</div>
+								<span class="input-group-text">
+									Answer 3
+								</span>
+							</div>
+							<input required type="text" class="form-control" name="answers[question][1][answer][3]">
 						</div>
-						<div>
-							<input type="radio">
-							<label for="radioButton">Answer 4</label>
-							<input type="text" name="answers[question][1][answer][4]">
+						<div class="input-group m-2">
+							<div class="input-group-prepend">
+								<div class="input-group-text">
+									<input type="checkbox" id="radioButton">
+								</div>
+								<span class="input-group-text">
+									Answer 4
+								</span>
+							</div>
+							<input required type="text" class="form-control" name="answers[question][1][answer][4]">
 						</div>
 					</div>
 				</div>
@@ -48,31 +72,55 @@
 		</form>
 	</div>
 	<script>
-		let i = 2;
+		let i = 1;
 	  document.getElementById('add-new-question').onclick = function() {
 	  	let template = `
 					<label for="question">Question ${i}</label>
-					<input type="text" name="questions[question][${i}]">
+					<input required type="text" class="form-control" name="questions[question][${i}]">
 					<div>
-						<div>
-							<input type="radio">
-							<label for="radioButton">Answer 1</label>
-							<input type="text" name="answers[question][${i}][answer][1]">
+						<div class="input-group m-2">
+							<div class="input-group-prepend">
+								<div class="input-group-text">
+									<input type="checkbox" id="radioButton">
+								</div>
+								<span class="input-group-text">
+									Answer 1
+								</span>
+							</div>
+							<input required type="text" class="form-control" name="answers[question][${i}][answer][1]">
 						</div>
-						<div>
-							<input type="radio">
-							<label for="radioButton">Answer 2</label>
-							<input type="text" name="answers[question][${i}][answer][2]">
+						<div class="input-group m-2">
+							<div class="input-group-prepend">
+								<div class="input-group-text">
+									<input type="checkbox" id="radioButton">
+								</div>
+								<span class="input-group-text">
+									Answer 1
+								</span>
+							</div>
+							<input required type="text" class="form-control" name="answers[question][${i}][answer][2]">
 						</div>
-						<div>
-							<input type="radio">
-							<label for="radioButton">Answer 3</label>
-							<input type="text" name="answers[question][${i}][answer][3]">
+						<div class="input-group m-2">
+							<div class="input-group-prepend">
+								<div class="input-group-text">
+									<input type="checkbox" id="radioButton">
+								</div>
+								<span class="input-group-text">
+									Answer 1
+								</span>
+							</div>
+							<input required type="text" class="form-control" name="answers[question][${i}][answer][3]">
 						</div>
-						<div>
-							<input type="radio">
-							<label for="radioButton">Answer 4</label>
-							<input type="text" name="answers[question][${i}][answer][4]">
+						<div class="input-group m-2">
+							<div class="input-group-prepend">
+								<div class="input-group-text">
+									<input type="checkbox" id="radioButton">
+								</div>
+								<span class="input-group-text">
+									Answer 1
+								</span>
+							</div>
+							<input required type="text" class="form-control" name="answers[question][${i}][answer][4]">
 						</div>
 					</div>
 	  	`;
