@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+
+{% block title %}Create New Quiz{% endblock %}
+{% block body %}
+	<div class="card m-3">
+		<h4 class="card-header">Create New Quiz</h4>
+		<form method="post" action="/submit-new-quiz" type="application/json">
+			<div class="card-body">
+				<div class="form-group">
+					<label for="quizName">Quiz Name</label>
+					<input type="text" class="form-control" id="quizName" name="name">
+				</div>
+				<div class="form-group">
+					<label for="quizDescription">Description</label>
+					<input type="text" class="form-control" id="quizDescription" name="description">
+				</div>
+				<div class="form-group m-2" id="question-container">
+					<label for="question">Question 1</label>
+					<input type="text" name="questions[question][1]">
+					<div>
+						<div>
+							<input type="radio">
+							<label for="radioButton">Answer 1</label>
+							<input type="text" name="answers[question][1][answer][1]">
+						</div>
+						<div>
+							<input type="radio">
+							<label for="radioButton">Answer 2</label>
+							<input type="text" name="answers[question][1][answer][2]">
+						</div>
+						<div>
+							<input type="radio">
+							<label for="radioButton">Answer 3</label>
+							<input type="text" name="answers[question][1][answer][3]">
+						</div>
+						<div>
+							<input type="radio">
+							<label for="radioButton">Answer 4</label>
+							<input type="text" name="answers[question][1][answer][4]">
+						</div>
+					</div>
+				</div>
+				<a href="javascript:;" id="add-new-question">Add new question</a>
+			</div>
+			<div class="card-footer">
+				<button type="submit" class="btn btn-primary">Submit</button>
+			</div>
+		</form>
+	</div>
+	<script>
+		let i = 2;
+	  document.getElementById('add-new-question').onclick = function() {
+	  	let template = `
+					<label for="question">Question ${i}</label>
+					<input type="text" name="questions[question][${i}]">
+					<div>
+						<div>
+							<input type="radio">
+							<label for="radioButton">Answer 1</label>
+							<input type="text" name="answers[question][${i}][answer][1]">
+						</div>
+						<div>
+							<input type="radio">
+							<label for="radioButton">Answer 2</label>
+							<input type="text" name="answers[question][${i}][answer][2]">
+						</div>
+						<div>
+							<input type="radio">
+							<label for="radioButton">Answer 3</label>
+							<input type="text" name="answers[question][${i}][answer][3]">
+						</div>
+						<div>
+							<input type="radio">
+							<label for="radioButton">Answer 4</label>
+							<input type="text" name="answers[question][${i}][answer][4]">
+						</div>
+					</div>
+	  	`;
+
+	    let container = document.getElementById('question-container');
+	    let div = document.createElement('div');
+	    div.innerHTML = template;
+	    container.appendChild(div);
+
+	    i++;
+	    container.value = i;
+	  }
+	</script>
+
+{% endblock %}

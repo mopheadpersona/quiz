@@ -2,7 +2,7 @@
 
 {% block title %} Quiz: {{ quiz.name }}{% endblock %}
 {% block body %}
-	<div class="card text-center">
+	<div class="card text-center m-3">
 		<h4 class="card-header">Quiz "{{ quiz.name }}"</h4>
 		<form method="post" action="/submit-quiz">
 
@@ -14,12 +14,12 @@
 				{% for answer in question.answers %}
 
 				<div class="form-check form-check-inline">
-	  				<input required class="form-check-input" type="radio" name="{{question.id}}" id="inlineRadio1" value="{{answer.id}}">
-	  				<label class="form-check-label" for="inlineRadio1">{{answer.text}}</label>
+					<input required class="form-check-input" type="radio" name="{{question.id}}" id="inlineRadio1" value="{{answer.id}}">
+					<label class="form-check-label" for="inlineRadio1">{{answer.text}}</label>
 				</div>
 
-  				{% endfor %}
-  		</div>
+				{% endfor %}
+		</div>
 		{% endfor %}
 		<div class="card-footer">
 			<button type="submit" class="btn btn-primary">Submit</button>
