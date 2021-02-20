@@ -2,6 +2,8 @@ from flask import Flask, abort, render_template, request
 #from flask_sqlalchemy import SQLAlchemy
 #from sqlalchemy.dialects.postgresql import JSON
 
+from uuid import uuid4
+
 from data import test_quiz, test_humans, test_quizes
 
 
@@ -48,10 +50,10 @@ def create_quiz():
 		for j in range(1, 5):
 			answer = {}
 			answer['answer'] = query[f'answers[question][{i}][answer][{j}]']
-			if query.get(f'correct[question][{i}][answer][{j}]'):
+			if query['correct_answer'] == f'answers[question][{i}][answer][{j}]':
 				answer['id'] = 'the_id'
 			else:
-				answer['id'] = 'just_id'
+				answer['id'] = uuid4()
 			answers.append(answer)
 		question['answers'] = answers
 		questions.append(question)
