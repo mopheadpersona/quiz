@@ -19,12 +19,21 @@ def insert(json):
 	db.session.add(data)
 	db.session.commit()
 
+def delete(id):
+	query = Quiz.query.filter(Quiz.id == id).all()[0]
+	db.session.delete(query)
+	db.session.commit()
 
 @app.route('/')
 def index():
 	data = Quiz.query.all()
 	quizes = list(map(lambda el: el.json_column, data))
 	return render_template('home.html', quizes=data)
+
+@app.route('/delete_quiz/<int:id>')
+def delete_quiz(id):
+	delete(id)
+	return redirect('/')
 
 @app.route('/quiz/<int:id>')
 def quiz(id):
