@@ -1,6 +1,6 @@
-from flask import Flask, abort, render_template, request
-#from flask_sqlalchemy import SQLAlchemy
-#from sqlalchemy.dialects.postgresql import JSON
+from flask import Flask, abort, render_template, request, redirect
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.dialects.postgresql import JSON
 
 from uuid import uuid4
 
@@ -8,14 +8,18 @@ from data import test_quiz, test_humans, test_quizes
 
 
 app = Flask(__name__)
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://deemaneken:star@localhost/quiz_db'
-#db = SQLAlchemy(app)
-#
-#class Quiz(db.Model):
-#	id = db.Column(db.Integer, primary_key=True)
-#	json_column = db.Column(JSON)
-#
-#db.create_all()
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://deemaneken:star@localhost/quiz_db'
+db = SQLAlchemy(app)
+
+class Quiz(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	json_column = db.Column(JSON)
+
+
+def insert(json):
+	data = Quiz(json_column=json)
+	db.session.add(data)
+	db.session.commit()
 
 
 @app.route('/')
@@ -36,6 +40,7 @@ def create_quiz():
 	data = {}
 	query = request.form
 	counter = 0
+	correct_id = uuid4()
 
 	for key in query:
 		if key.startswith('questions[question]'):
@@ -45,15 +50,15 @@ def create_quiz():
 	for i in range(1, counter + 1):
 		question = {}
 		question['question'] = query[f'questions[question][{i}]']
-		question['correct_answer_id'] = 'the_id'
+		question['correct_answer_id'] = str(correct_id)
 		answers = []
 		for j in range(1, 5):
 			answer = {}
 			answer['answer'] = query[f'answers[question][{i}][answer][{j}]']
-			if query['correct_answer'] == f'answers[question][{i}][answer][{j}]':
-				answer['id'] = 'the_id'
+			if query[f'correct_answer{i}'] == f'answers[question][{i}][answer][{j}]':
+				answer['id'] = str(correct_id) 
 			else:
-				answer['id'] = uuid4()
+				answer['id'] = str(uuid4())
 			answers.append(answer)
 		question['answers'] = answers
 		questions.append(question)
@@ -63,7 +68,8 @@ def create_quiz():
 	data['length'] = str(counter)
 	data['questions'] = questions
 
-	return data
+	insert(data)
+	return redirect('/')
 
 @app.route('/submit-quiz', methods=['POST'])
 def process_quiz():
