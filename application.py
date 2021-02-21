@@ -4,8 +4,6 @@ from sqlalchemy.dialects.postgresql import JSON
 
 from uuid import uuid4
 
-from data import test_quiz, test_humans, test_quizes
-
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://deemaneken:star@localhost/quiz_db'
