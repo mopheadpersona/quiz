@@ -1,21 +1,21 @@
 {% extends "layout.html" %}
 
-{% block title %} Quiz: {{ quiz.name }}{% endblock %}
+{% block title %} Quiz: {{ quiz.json_column.name }}{% endblock %}
 {% block body %}
 	<div class="card text-center m-3">
-		<h4 class="card-header">Quiz "{{ quiz.name }}"</h4>
-		<form method="post" action="/submit-quiz">
+		<h4 class="card-header">Quiz "{{ quiz.json_column.name }}"</h4>
+		<form method="post" action="{{ url_for('submit', id=quiz.id) }}">
 
-		{% for question in quiz.questions %}
+		{% for question in quiz.json_column.questions %}
 
 		<div class="card-body">
-			<h5 class="card-title">{{question.text}}</h5>
+			<h5 class="card-title">{{question.question}}</h5>
 
 				{% for answer in question.answers %}
 
 				<div class="form-check form-check-inline">
 					<input required class="form-check-input" type="radio" name="{{question.id}}" id="inlineRadio1" value="{{answer.id}}">
-					<label class="form-check-label" for="inlineRadio1">{{answer.text}}</label>
+					<label class="form-check-label" for="inlineRadio1">{{answer.answer}}</label>
 				</div>
 
 				{% endfor %}

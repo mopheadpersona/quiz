@@ -23,13 +23,15 @@ def insert(json):
 
 
 @app.route('/')
-def index(): 
-	return render_template('home.html', quizes=test_quizes)
+def index():
+	data = Quiz.query.all()
+	quizes = list(map(lambda el: el.json_column, data))
+	return render_template('home.html', quizes=data)
 
-@app.route('/quiz')
-def quiz():
-	# return test_quiz
-	return render_template('quiz.html', quiz=test_quiz)
+@app.route('/quiz/<int:id>')
+def quiz(id):
+	data = Quiz.query.filter(Quiz.id == id).all()
+	return render_template('quiz.html', quiz=data[0])
 
 @app.route('/create-quiz')
 def add_quiz():
@@ -40,7 +42,7 @@ def create_quiz():
 	data = {}
 	query = request.form
 	counter = 0
-	correct_id = uuid4()
+	correct_id = str(uuid4())
 
 	for key in query:
 		if key.startswith('questions[question]'):
@@ -50,13 +52,14 @@ def create_quiz():
 	for i in range(1, counter + 1):
 		question = {}
 		question['question'] = query[f'questions[question][{i}]']
-		question['correct_answer_id'] = str(correct_id)
+		question['id'] = str(uuid4())
+		question['correct_answer_id'] = correct_id
 		answers = []
 		for j in range(1, 5):
 			answer = {}
 			answer['answer'] = query[f'answers[question][{i}][answer][{j}]']
 			if query[f'correct_answer{i}'] == f'answers[question][{i}][answer][{j}]':
-				answer['id'] = str(correct_id) 
+				answer['id'] = correct_id
 			else:
 				answer['id'] = str(uuid4())
 			answers.append(answer)
@@ -71,16 +74,18 @@ def create_quiz():
 	insert(data)
 	return redirect('/')
 
-@app.route('/submit-quiz', methods=['POST'])
-def process_quiz():
+@app.route('/submit/<int:id>', methods=['POST'])
+def submit(id):
+	query = Quiz.query.filter(Quiz.id == id).all()[0].json_column
 	results = request.form
 	points = 0
 
-	for question in test_quiz['questions']:
+
+	for question in query['questions']:
 		if results[question['id']] == question['correct_answer_id']:
 			points += 1
 
-	return str(points)
+	return f'Your score is {points}/{query["length"]}'
 
 @app.route('/leader-board')
 def leader_board():
