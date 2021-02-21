@@ -1,18 +1,32 @@
-from flask import Flask, abort, render_template, request, redirect
+from flask import Flask, abort, render_template, request, redirect, flash, url_for
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import JSON
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from uuid import uuid4
 
 
 app = Flask(__name__)
+app.secret_key = 'uran horse button'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://deemaneken:star@localhost/quiz_db'
 db = SQLAlchemy(app)
+manager = LoginManager(app)
 
 class Quiz(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	json_column = db.Column(JSON)
 
+class User(db.Model, UserMixin):
+	id = db.Column(db.Integer, primary_key=True)
+	login = db.Column(db.String(128), nullable=False, unique=True)
+	password = db.Column(db.String(255), nullable=False)
+
+db.create_all()
+
+@manager.user_loader
+def load_user(user_id):
+	return User.query.get(user_id)
 
 def insert(json):
 	data = Quiz(json_column=json)
@@ -20,9 +34,66 @@ def insert(json):
 	db.session.commit()
 
 def delete(id):
-	query = Quiz.query.filter(Quiz.id == id).all()[0]
+	query = Quiz.query.filter(Quiz.id == id).first()
 	db.session.delete(query)
 	db.session.commit()
+
+@app.after_request
+def redirect_to_signin(response):
+	if response.status_code == 401:
+		return redirect(url_for('login') + '?next=' + request.url)
+
+	return response
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+	login = request.form.get('login')
+	password = request.form.get('password')
+
+	if login and password:
+		user = User.query.filter_by(login=login).first()
+
+		if user and check_password_hash(user.password, password):
+			login_user(user)
+
+			to_page = request.args.get('next')
+			if to_page is None:
+				return redirect(url_for('index'))
+
+			return redirect(to_page)
+		else:
+			flash('Login or password is not correct')
+	else:
+		flash('Please fill login and password fields')
+	
+	return render_template('login.html')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+	login = request.form.get('login')
+	password = request.form.get('password')
+	password2 = request.form.get('password2')
+
+	if request.method == 'POST':
+		if not (login or password or password2):
+			flash('Please, fill all fields!')
+		elif password != password2:
+			flash('Passwords are not equal!')
+		else:
+			hash_password = generate_password_hash(password)
+			new_user = User(login=login, password=hash_password)
+			db.session.add(new_user)
+			db.session.commit()
+
+			return redirect('login')
+
+	return render_template('register.html')
+
+@app.route('/logout', methods=['GET', 'POST'])
+@login_required
+def logout():
+	logout_user()
+	return redirect(url_for('index'))
 
 @app.route('/')
 def index():
@@ -31,20 +102,24 @@ def index():
 	return render_template('home.html', quizes=data)
 
 @app.route('/delete_quiz/<int:id>')
+@login_required
 def delete_quiz(id):
 	delete(id)
-	return redirect('/')
+	return redirect(url_for('index'))
 
 @app.route('/quiz/<int:id>')
+@login_required
 def quiz(id):
-	data = Quiz.query.filter(Quiz.id == id).all()
-	return render_template('quiz.html', quiz=data[0])
+	data = Quiz.query.filter(Quiz.id == id).first()
+	return render_template('quiz.html', quiz=data)
 
 @app.route('/create-quiz')
+@login_required
 def add_quiz():
 	return render_template('create.html')
 
 @app.route('/submit-new-quiz', methods=['POST'])
+@login_required
 def create_quiz():
 	data = {}
 	query = request.form
@@ -82,6 +157,7 @@ def create_quiz():
 	return redirect('/')
 
 @app.route('/submit/<int:id>', methods=['POST'])
+@login_required
 def submit(id):
 	query = Quiz.query.filter(Quiz.id == id).all()[0].json_column
 	results = request.form
@@ -95,7 +171,22 @@ def submit(id):
 	return f'Your score is {points}/{query["length"]}'
 
 @app.route('/leader-board')
+@login_required
 def leader_board():
+	test_humans = [
+		{
+			"id": "the_id",
+			"quiz": "Test Quiz",
+			"name": "John",
+			"result": "3"
+		},
+		{
+			"id": "the_id",
+			"quiz": "Test Quiz",
+			"name": "James",
+			"result": "4"
+		}
+	]
 	return render_template('leaderboard.html', humans=test_humans)
 
 @app.errorhandler(404)

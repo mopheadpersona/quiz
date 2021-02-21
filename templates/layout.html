@@ -22,11 +22,27 @@
 					<a href="/leader-board" class="nav-link">LeaderBoard</a>
 				</li>
 			</ul>
-			<span class="navbar-text">
-				User name
-			</span>
+			{% if current_user.login %}
+			<div class="navbar-nav">
+				<a class="nav-link disabled">{{ current_user.login }}</a>
+				<a href="{{ url_for('logout') }}" class="nav-link active">Log out</a>
+			</div>
+			{% else %}
+			<div class="navbar-nav">
+				<a href="{{ url_for('login') }}" class="nav-link active">Log in</a>
+			</div>
+			{% endif %}
 		</div>
 	</nav>
+
+	{% with messages = get_flashed_messages() %}
+  		{% if messages %}
+    		{% for message in messages %}
+    			<div class="alert alert-danger">{{ message }}</div>
+    		{% endfor %}
+  		{% endif %}
+	{% endwith %}
+
 	<div class="container">
 	{% block body %}{% endblock %}
 	</div>

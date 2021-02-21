@@ -2,26 +2,48 @@
 
 {% block title %}Quiz Home{% endblock %}
 {% block body %}
-	<div class="row m-3">
+	<div class="row m-2">
 		{% for question in quizes %}
 		<div class="col-sm-6">
-			<div class="card m-3">
+			<div class="card m-1">
 				<div class="card-body">
 					<h5 class="card-title display-4">{{question.json_column.name}}</h5>
 					<p>{{question.json_column.description}}</p>
 					<div>
-						<a href="{{url_for('quiz', id=question.id)}}" class="btn btn-primary bi-collection-play" role="button"></a>
-						<a href="/" class="btn btn-warning bi-pencil-square" role="button"></a>
-						<a href="{{ url_for('delete_quiz', id=question.id) }}" class="btn btn-danger bi-trash" role="button"></a>
+						<a 
+							href="{{url_for('quiz', id=question.id)}}" 
+							class="btn btn-primary bi-collection-play" 
+							role="button"
+						>
+							Start	
+						</a>
+						{% if current_user.login == 'admin' %}
+						<a 
+							href="/" 
+							class="btn btn-warning bi-pencil-square" 
+							role="button"
+						>
+							Update
+						</a>
+						<a 
+							href="{{ url_for('delete_quiz', id=question.id) }}" 
+							class="btn btn-danger bi-trash" 
+							role="button"
+						>
+							Delete
+						</a>
+						{% endif %}
 					</div>
 				</div>
 			</div>
 		</div>
 		{% endfor %}
-		<div class="col-sm-6 d-flex">
+		{% if current_user.login == 'admin' %}
+		<div class="col-sm-6 text-center">
 			<a href="/create-quiz" role="button">
 				<i class="bi-plus-circle" style="font-size: 5rem; color: grey;"></i>
 			</a>
 		</div>
+		{% endif %}
 	</div>
 {% endblock %}
