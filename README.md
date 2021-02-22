@@ -6,7 +6,7 @@
 * play existed quizes or create a new one
 * to delete quiz use admin account
 
-## To run Quiz localy:
+## To run Quiz locally:
 * create postgreSQL database localy
 * clone this [repo](https://github.com/mopheadpersona/quiz.git)
 * change database link on `app.py`
@@ -14,4 +14,4 @@
 ```cd quiz
 pip3 install pipenv
 pipenv shell
-python3 app.py```
+python3 app.py
