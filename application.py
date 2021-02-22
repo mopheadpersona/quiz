@@ -1,7 +1,7 @@
 from flask import Flask, abort, render_template, request, redirect, flash, url_for
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import JSON
-from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from uuid import uuid4
@@ -21,6 +21,12 @@ class User(db.Model, UserMixin):
 	id = db.Column(db.Integer, primary_key=True)
 	login = db.Column(db.String(128), nullable=False, unique=True)
 	password = db.Column(db.String(255), nullable=False)
+
+class LeaderBoard(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	user = db.Column(db.String(128))
+	quiz = db.Column(db.String(255))
+	result = db.Column(db.Integer)
 
 db.create_all()
 
@@ -159,35 +165,33 @@ def create_quiz():
 @app.route('/submit/<int:id>', methods=['POST'])
 @login_required
 def submit(id):
-	query = Quiz.query.filter(Quiz.id == id).all()[0].json_column
+	query = Quiz.query.filter(Quiz.id == id).first()
 	results = request.form
 	points = 0
 
-
-	for question in query['questions']:
+	for question in query.json_column['questions']:
 		if results[question['id']] == question['correct_answer_id']:
 			points += 1
 
-	return f'Your score is {points}/{query["length"]}'
+	user = current_user.login
+	quiz = query.json_column["name"]
+	new_row = LeaderBoard(user=user, quiz=quiz, result=points)
+	db.session.add(new_row)
+	db.session.commit()
+
+	score = {}
+	score["length"] = query.json_column["length"]
+	score["result"] = points
+
+	return render_template('score.html', score=score)
+
 
 @app.route('/leader-board')
 @login_required
 def leader_board():
-	test_humans = [
-		{
-			"id": "the_id",
-			"quiz": "Test Quiz",
-			"name": "John",
-			"result": "3"
-		},
-		{
-			"id": "the_id",
-			"quiz": "Test Quiz",
-			"name": "James",
-			"result": "4"
-		}
-	]
-	return render_template('leaderboard.html', humans=test_humans)
+	data = LeaderBoard.query.all()
+
+	return render_template('leaderboard.html', users=data)
 
 @app.errorhandler(404)
 def page_not_found(error):

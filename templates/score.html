@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+
+{% block title %}Your Score{% endblock %}
+{% block body %}
+	<div class="card text-center m-5" style="border-style: none;">
+		<h1>Your score is {{score.result}}/{{score.length}}</h1>
+		<a href="{{url_for('leader_board')}}">Global Ranking</a>
+	</div>
+{% endblock %}

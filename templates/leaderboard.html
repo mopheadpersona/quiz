@@ -19,12 +19,20 @@
 					</tr>
 				</thead>
 				<tbody>
-					{% for human in humans %}
-					<tr>
-						<td>{{human.name}}</td>
-						<td>{{human.quiz}}</td>
-						<td>{{human.result}}</td>
+					{% for user in users %}
+					{% if user.user == current_user.login %}
+					<tr style="background-color: yellow;">
+						<td>{{user.user}}</td>
+						<td>{{user.quiz}}</td>
+						<td>{{user.result}}</td>
 					</tr>
+					{% else %}
+					<tr>
+						<td>{{user.user}}</td>
+						<td>{{user.quiz}}</td>
+						<td>{{user.result}}</td>
+					</tr>
+					{% endif %}
 					{% endfor %}
 				</tbody>
 			</table>
