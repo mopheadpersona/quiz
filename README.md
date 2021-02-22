@@ -11,7 +11,7 @@
 * clone this [repo](https://github.com/mopheadpersona/quiz.git)
 * change database link on `app.py`
 * change env `ENV = 'dev'`
-	cd quiz
-	pip3 install pipenv
-	pipenv shell
-	python3 app.py
+```cd quiz
+pip3 install pipenv
+pipenv shell
+python3 app.py```
