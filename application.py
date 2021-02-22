@@ -8,8 +8,19 @@ from uuid import uuid4
 
 
 app = Flask(__name__)
+
+ENV = 'prod'
+
+if ENV == 'dev':
+	app.debug = True
+	app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://deemaneken:star@localhost/quiz_db'
+else:
+	app.debug = False
+	app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://zyrcpnkzmkjlki:c0f9e39456895a79fa7e55bfe5b887420078b7679236bb1c5f26cc6fc123778b@ec2-3-222-127-167.compute-1.amazonaws.com:5432/d97co0dovlgqh6'
+
+
 app.secret_key = 'uran horse button'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://deemaneken:star@localhost/quiz_db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 manager = LoginManager(app)
 
